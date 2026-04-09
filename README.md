@@ -8,7 +8,7 @@ Built by practitioners running real ad spend across Google, Meta, Microsoft, Lin
 
 | MCP Server | Platform | Tools | Install |
 |------------|----------|-------|---------|
-| [mcp-google-ads](https://github.com/mharnett/mcp-google-ads) | Google Ads | 35 | `npm install mcp-google-ads` |
+| [mcp-google-ads](https://github.com/mharnett/mcp-google-ads) | Google Ads | 34 | `npm install mcp-google-ads` |
 | [mcp-bing-ads](https://github.com/mharnett/mcp-bing-ads) | Microsoft Advertising | 10 | `npm install mcp-bing-ads` |
 | [mcp-linkedin-ads](https://github.com/mharnett/mcp-linkedin-ads) | LinkedIn Ads | 7 | `npm install mcp-linkedin-ads` |
 | [mcp-reddit-ads](https://github.com/mharnett/mcp-reddit-ads) | Reddit Ads | 18 | `npm install mcp-reddit-ads` |
@@ -17,7 +17,7 @@ Built by practitioners running real ad spend across Google, Meta, Microsoft, Lin
 | [mcp-google-gsc](https://github.com/mharnett/mcp-search-console) | Google Search Console | 4 | `npm install mcp-google-gsc` |
 | [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | 13 | `npm install mcp-gtm-ga4` |
 
-**124+ tools** across 8 platforms. 7 TypeScript servers on npm, 1 Python server on PyPI.
+**120+ tools** across 8 platforms. 7 TypeScript servers on npm, 1 Python server on PyPI.
 
 ## What You Can Do
 
@@ -119,7 +119,7 @@ User <-> Claude <-> MCP Server <-> Platform API
 
 ### Ad Platforms
 
-**mcp-google-ads** -- The most comprehensive server. 35 tools including MCC (Multi-Client Center) support, GAQL queries, auto-context detection from working directory, and full campaign/keyword/ad management. Safe-by-default with approval workflow for activations.
+**mcp-google-ads** -- The most comprehensive server. 34 tools including MCC (Multi-Client Center) support, GAQL queries, auto-context detection from working directory, and full campaign/keyword/ad management. Safe-by-default with approval workflow for activations.
 
 **mcp-bing-ads** -- 10 tools for Microsoft Advertising. Campaign and keyword performance reports with CSV parsing from Bing's ZIP format. Shared negative keyword list management.
 
