@@ -15,9 +15,9 @@ Built by practitioners running real ad spend across Google, Meta, Microsoft, Lin
 | [meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp) | Meta (Facebook/Instagram) | 28 | `pip install meta-ads-mcp` |
 | [mcp-ga4](https://github.com/mharnett/mcp-ga4) | Google Analytics 4 | 9 | `npm install mcp-ga4` |
 | [mcp-google-gsc](https://github.com/mharnett/mcp-search-console) | Google Search Console | 4 | `npm install mcp-google-gsc` |
-| [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | 13 | `npm install mcp-gtm-ga4` |
+| [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | 14 | `npm install mcp-gtm-ga4` |
 
-**120+ tools** across 8 platforms. 7 TypeScript servers on npm, 1 Python server on PyPI.
+**124 tools** across 8 platforms. 7 TypeScript servers on npm, 1 Python server on PyPI.
 
 ## What You Can Do
 
@@ -73,7 +73,8 @@ Add servers to your `.mcp.json`:
         "GOOGLE_ADS_CLIENT_ID": "your-client-id",
         "GOOGLE_ADS_CLIENT_SECRET": "your-client-secret",
         "GOOGLE_ADS_REFRESH_TOKEN": "your-refresh-token",
-        "GOOGLE_ADS_DEVELOPER_TOKEN": "your-dev-token"
+        "GOOGLE_ADS_DEVELOPER_TOKEN": "your-dev-token",
+        "GOOGLE_ADS_CUSTOMER_ID": "123-456-7890"
       }
     },
     "ga4": {
@@ -94,6 +95,8 @@ Add servers to your `.mcp.json`:
   }
 }
 ```
+
+**Security:** Never share your `.mcp.json` file or commit it to git -- it may contain API credentials. Add `.mcp.json` to your `.gitignore`.
 
 See each server's README for full configuration details.
 
@@ -135,7 +138,7 @@ User <-> Claude <-> MCP Server <-> Platform API
 
 **mcp-google-gsc** -- 4 tools for Google Search Console. Search analytics with dimension filters (query, page, device, country), URL inspection for indexing status, and site listing.
 
-**mcp-gtm-ga4** -- 13 tools combining Google Tag Manager and GA4. Tag/trigger/variable management, consent compliance auditing, workspace preview and versioning. Sandbox safety prevents accidental production changes.
+**mcp-gtm-ga4** -- 14 tools combining Google Tag Manager and GA4. Tag/trigger/variable management, consent compliance auditing, workspace preview and versioning. Sandbox safety prevents accidental production changes.
 
 ## Credentials Guide
 
