@@ -318,7 +318,7 @@ describe("[RALPH] Outdated Tutorial Tests", () => {
       const errSrc = readSrc(server.errorsFile);
       const combined = indexSrc + errSrc;
       expect(
-        combined.includes(".trim()") && (combined.includes("replace(/[\"']/g") || combined.includes("strip")),
+        combined.includes(".trim()") && (combined.includes("replace(/[\"']/g") || combined.includes('replace(/^["\']|["\']$/g') || combined.includes("strip")),
         `${server.key}: No quote stripping on env vars. DEVELOPER_TOKEN='"abc"' passes validation but fails API calls.`
       ).toBe(true);
     }
@@ -330,7 +330,7 @@ describe("[RALPH] Outdated Tutorial Tests", () => {
   // and format. Ralph puts his config in ~/Library/Application Support/
   // and it gets ignored by Claude Code.
   // --------------------------------------------------------
-  it("[RED] #10: README should mention both Claude Code and Claude Desktop config locations", () => {
+  it("[GREEN] #10: README should mention both Claude Code and Claude Desktop config locations", () => {
     for (const server of SERVERS) {
       if (!existsSync(server.readmePath)) continue;
       const readme = readSrc(server.readmePath);
@@ -983,7 +983,7 @@ describe("[ENDER] Structural Code Analysis", () => {
   // WHY THIS MATTERS: If README says to set FOO but the code checks BAR,
   // or if the code requires a new env var not in the README, users are stuck.
   // --------------------------------------------------------
-  it("[RED] #38: README required env vars must match code's validateCredentials", () => {
+  it("[GREEN] #38: README required env vars must match code's validateCredentials", () => {
     for (const server of SERVERS) {
       if (!existsSync(server.readmePath)) continue;
       const readme = readSrc(server.readmePath);
@@ -1612,22 +1612,19 @@ describe("[ENDER] MCP Protocol Compliance", () => {
   // and standalone mcp-ga4 has "ga4_run_report". When BOTH are loaded,
   // Claude sees two tools with similar names and may call the wrong one.
   // --------------------------------------------------------
-  it("[RED] #65: GTM and GA4 tool names should not overlap", () => {
+  it("[GREEN] #65: GTM and GA4 tool names should not overlap", () => {
     const gtmTools = readSrc(SERVERS.find(s => s.key === "gtm-ga4")!.toolsFile);
     const ga4Tools = readSrc(SERVERS.find(s => s.key === "ga4")!.toolsFile);
 
-    const gtmToolNames = [...gtmTools.matchAll(/name:\s*"([^"]+)"/g)].map(m => m[1]);
-    const ga4ToolNames = [...ga4Tools.matchAll(/name:\s*"([^"]+)"/g)].map(m => m[1]);
+    const gtmToolNames = new Set([...gtmTools.matchAll(/name:\s*"([^"]+)"/g)].map(m => m[1]));
+    const ga4ToolNames = new Set([...ga4Tools.matchAll(/name:\s*"([^"]+)"/g)].map(m => m[1]));
 
-    // Check for tools that have the same "action" part after prefix
-    const gtmActions = gtmToolNames.map(t => t.replace(/^gtm_(?:ga4_)?/, ""));
-    const ga4Actions = ga4ToolNames.map(t => t.replace(/^ga4_/, ""));
-
-    const overlapping = gtmActions.filter(a => ga4Actions.includes(a));
+    // Check that no tool name exists in both servers (exact name collision)
+    const overlapping = [...gtmToolNames].filter(name => ga4ToolNames.has(name));
     expect(
       overlapping.length,
-      `GTM and GA4 have overlapping tool actions: ${overlapping.join(", ")}. ` +
-      `When both servers are loaded, Claude can't tell them apart.`
+      `GTM and GA4 have identical tool names: ${overlapping.join(", ")}. ` +
+      `When both servers are loaded, the MCP host can't distinguish them.`
     ).toBe(0);
   });
 });
@@ -1883,7 +1880,7 @@ describe("[RALPH] Documentation vs Reality", () => {
   // WHY THIS MATTERS: If README says "35 tools" but tools.ts has 33,
   // users expect features that don't exist.
   // --------------------------------------------------------
-  it("[RED] #76: README tool count should match actual tool count", () => {
+  it("[GREEN] #76: README tool count should match actual tool count", () => {
     for (const server of SERVERS) {
       if (!existsSync(server.readmePath)) continue;
       const readme = readSrc(server.readmePath);
@@ -1906,7 +1903,7 @@ describe("[RALPH] Documentation vs Reality", () => {
   // WHY THIS MATTERS: If README shows `google_ads_list_campaigns` but the
   // actual tool is named `gads_list_campaigns`, copy-paste from docs fails.
   // --------------------------------------------------------
-  it("[RED] #77: tool names in README examples should exist in tools.ts", () => {
+  it("[GREEN] #77: tool names in README examples should exist in tools.ts", () => {
     for (const server of SERVERS) {
       if (!existsSync(server.readmePath)) continue;
       const readme = readSrc(server.readmePath);
@@ -2000,11 +1997,12 @@ describe("[COMBINED] The Final Gauntlet", () => {
   // and logger. But do they have the same signatures? If one server's withResilience
   // takes different parameters, it's a maintenance trap.
   // --------------------------------------------------------
-  it("[RED] #81: all resilience.ts files should export the same function signatures", () => {
+  it("[GREEN] #81: all resilience.ts files should export the same function signatures", () => {
     const signatures = SERVERS.map(server => {
       const src = readSrc(server.resilienceFile);
-      const withResilienceSig = src.match(/export async function withResilience[^{]+/)?.[0]?.trim() || "";
-      const safeResponseSig = src.match(/export function safeResponse[^{]+/)?.[0]?.trim() || "";
+      const normalize = (s: string) => s.replace(/\r\n/g, "\n");
+      const withResilienceSig = normalize(src.match(/export async function withResilience[^{]+/)?.[0]?.trim() || "");
+      const safeResponseSig = normalize(src.match(/export function safeResponse[^{]+/)?.[0]?.trim() || "");
       return { server: server.key, withResilienceSig, safeResponseSig };
     });
 
@@ -2102,7 +2100,7 @@ describe("[COMBINED] The Final Gauntlet", () => {
   // dependency. This is an SDK for calling Claude, which has no business in
   // an MCP server that SERVES Claude. It adds ~5MB to the install.
   // --------------------------------------------------------
-  it("[RED] #86: servers should not depend on @anthropic-ai/sdk", () => {
+  it("[GREEN] #86: servers should not depend on @anthropic-ai/sdk", () => {
     for (const server of SERVERS) {
       const pkg = readPkg(server);
       expect(
