@@ -1,0 +1,15 @@
+{
+  "name": "mcp-marketing-suite-smoke-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "test:live": "LIVE_TEST=true vitest run"
+  },
+  "devDependencies": {
+    "vitest": "~4.0.18",
+    "typescript": "^5.8.3",
+    "@modelcontextprotocol/sdk": "^1.12.1"
+  }
+}
