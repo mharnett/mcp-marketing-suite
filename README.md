@@ -6,18 +6,47 @@ Built by practitioners running real ad spend across Google, Meta, Microsoft, Lin
 
 ## The Suite
 
-| MCP Server | Platform | Tools | Install |
-|------------|----------|-------|---------|
-| [mcp-google-ads](https://github.com/mharnett/mcp-google-ads) | Google Ads | 34 | `npm install mcp-google-ads` |
-| [mcp-bing-ads](https://github.com/mharnett/mcp-bing-ads) | Microsoft Advertising | 10 | `npm install mcp-bing-ads` |
-| [mcp-linkedin-ads](https://github.com/mharnett/mcp-linkedin-ads) | LinkedIn Ads | 7 | `npm install mcp-linkedin-ads` |
-| [mcp-reddit-ads](https://github.com/mharnett/mcp-reddit-ads) | Reddit Ads | 18 | `npm install mcp-reddit-ads` |
-| [meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp) | Meta (Facebook/Instagram) | 28 | `pip install meta-ads-mcp` |
-| [mcp-ga4](https://github.com/mharnett/mcp-ga4) | Google Analytics 4 | 9 | `npm install mcp-ga4` |
-| [mcp-google-gsc](https://github.com/mharnett/mcp-search-console) | Google Search Console | 4 | `npm install mcp-google-gsc` |
-| [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | 14 | `npm install mcp-gtm-ga4` |
+| MCP Server | Platform | Tools | ~Context cost | Install |
+|------------|----------|-------|---------------|---------|
+| [mcp-google-ads](https://github.com/mharnett/mcp-google-ads) | Google Ads | 34 | ~14K tokens | `npm install mcp-google-ads` |
+| [mcp-bing-ads](https://github.com/mharnett/mcp-bing-ads) | Microsoft Advertising | 10 | ~4K tokens | `npm install mcp-bing-ads` |
+| [mcp-linkedin-ads](https://github.com/mharnett/mcp-linkedin-ads) | LinkedIn Ads | 7 | ~3K tokens | `npm install mcp-linkedin-ads` |
+| [mcp-reddit-ads](https://github.com/mharnett/mcp-reddit-ads) | Reddit Ads | 18 | ~7K tokens | `npm install mcp-reddit-ads` |
+| [meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp) | Meta (Facebook/Instagram) | 28 | ~11K tokens | `pip install meta-ads-mcp` |
+| [mcp-ga4](https://github.com/mharnett/mcp-ga4) | Google Analytics 4 | 9 | ~4K tokens | `npm install mcp-ga4` |
+| [mcp-google-gsc](https://github.com/mharnett/mcp-search-console) | Google Search Console | 4 | ~2K tokens | `npm install mcp-google-gsc` |
+| [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | 14 | ~6K tokens | `npm install mcp-gtm-ga4` |
 
 **124 tools** across 8 platforms. 7 TypeScript servers on npm, 1 Python server on PyPI.
+
+## Choose What You Need (Context Matters)
+
+**Don't install all eight.** Each MCP server's tool schemas are loaded into Claude's context window on every conversation. Installing the full suite adds **~50K tokens of overhead** before you type a single message — about 25% of a 200K context window on Claude Desktop, which doesn't yet support deferred tool loading.
+
+Pick the platforms you actually use. The suite is designed to be additive, not all-or-nothing.
+
+### Recommended profiles
+
+**Google-only practitioner** (~24K tokens)
+```
+mcp-google-ads + mcp-ga4 + mcp-google-gsc
+```
+
+**Cross-channel paid media manager** (~36K tokens)
+```
+mcp-google-ads + meta-ads-mcp + mcp-ga4 + mcp-google-gsc
+```
+
+**Full agency stack — only if you actually run all five ad platforms** (~50K tokens)
+```
+All eight servers
+```
+
+### Notes on context cost
+
+- Estimates assume ~400 tokens per tool schema (name + description + parameters). Actual cost varies by tool complexity.
+- **Claude Code users**: tool schemas are loaded on demand via Tool Search starting in late 2025, so the practical cost is significantly lower (~1K per server for names, full schemas fetched as needed). The numbers above are the worst case (Claude Desktop, OpenAI clients, Cursor, etc.).
+- **Disable servers per project**: Use a project-scoped `.mcp.json` (in your repo root) to load only the MCPs relevant to that client or workflow, rather than enabling everything globally.
 
 ## What You Can Do
 
@@ -43,17 +72,17 @@ Built by practitioners running real ad spend across Google, Meta, Microsoft, Lin
 
 ### Install Individual Servers
 
-Each server is standalone. Install only what you need:
+Each server is standalone. **Install only what you need** — see [Choose What You Need](#choose-what-you-need-context-matters) above.
 
 ```bash
-# Ad platforms
+# Ad platforms — pick what you actually run
 npm install mcp-google-ads
 npm install mcp-bing-ads
 npm install mcp-linkedin-ads
 npm install mcp-reddit-ads
 pip install meta-ads-mcp
 
-# Analytics & tracking
+# Analytics & tracking — pick what you actually use
 npm install mcp-ga4
 npm install mcp-google-gsc
 npm install mcp-gtm-ga4
