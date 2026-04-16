@@ -40,10 +40,12 @@ interface ServerDef {
   configStyle: "env" | "config" | "both";
 }
 
+const MCP_ROOT = join(__dirname, "../..");
+
 const SERVERS: ServerDef[] = [
   {
     pkg: "mcp-google-ads",
-    cwd: "/Users/mark/claude-code/mcps/mcp-google-ads",
+    cwd: join(MCP_ROOT, "mcp-google-ads"),
     tools: [
       "google_ads_get_client_context",
       "google_ads_list_campaigns",
@@ -90,7 +92,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-bing-ads",
-    cwd: "/Users/mark/claude-code/mcps/mcp-bing-ads",
+    cwd: join(MCP_ROOT, "mcp-bing-ads"),
     tools: [
       "bing_ads_get_client_context",
       "bing_ads_list_campaigns",
@@ -112,7 +114,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-linkedin-ads",
-    cwd: "/Users/mark/claude-code/mcps/mcp-linkedin-ads",
+    cwd: join(MCP_ROOT, "mcp-linkedin-ads"),
     tools: [
       "linkedin_ads_get_client_context",
       "linkedin_ads_list_accounts",
@@ -127,7 +129,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-reddit-ads",
-    cwd: "/Users/mark/claude-code/mcps/reddit-ad-mcp",
+    cwd: join(MCP_ROOT, "reddit-ad-mcp"),
     tools: [
       "reddit_ads_get_client_context",
       "reddit_ads_get_accounts",
@@ -157,7 +159,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-google-gsc",
-    cwd: "/Users/mark/claude-code/mcps/mcp-gsc",
+    cwd: join(MCP_ROOT, "mcp-gsc"),
     tools: [
       "gsc_get_client_context",
       "gsc_list_sites",
@@ -169,7 +171,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-ga4",
-    cwd: "/Users/mark/claude-code/mcps/mcp-ga4",
+    cwd: join(MCP_ROOT, "mcp-ga4"),
     tools: [
       "ga4_get_client_context",
       "ga4_run_report",
@@ -186,7 +188,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-gtm-ga4",
-    cwd: "/Users/mark/claude-code/mcps/neon-one-gtm",
+    cwd: join(MCP_ROOT, "neon-one-gtm"),
     tools: [
       "gtm_list_tags",
       "gtm_get_tag",
@@ -621,9 +623,9 @@ describe("2. Configuration adversarial tests", () => {
     }, 10_000);
 
     it("2C.03 [mcp-ga4] - property ID with special characters", async () => {
-      // WHY: User pastes "properties/331956119" instead of just "331956119"
+      // WHY: User pastes "properties/123456789" instead of just "123456789"
       const { proc, stderr } = spawnServer(SERVERS[5].cwd, {
-        GA4_PROPERTY_ID: "properties/331956119",
+        GA4_PROPERTY_ID: "properties/123456789",
         HOME: TMP_DIR,
       });
       // This might start OK but fail on API calls. That's acceptable behavior.
@@ -669,7 +671,7 @@ describe("2. Configuration adversarial tests", () => {
         GOOGLE_ADS_CLIENT_SECRET: "reddit-secret-xyz",
         GOOGLE_ADS_DEVELOPER_TOKEN: "not-a-real-dev-token",
         GOOGLE_ADS_REFRESH_TOKEN: "1//reddit-refresh-token-lol",
-        GOOGLE_ADS_CUSTOMER_ID: "t2_zfxqy5r",  // Reddit account ID format
+        GOOGLE_ADS_CUSTOMER_ID: "t2_abc123xyz",  // Reddit account ID format
         HOME: TMP_DIR,
       });
       const code = await waitForExit(proc, 3_000);
@@ -932,7 +934,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
       const { isError, text } = await callToolSafely(
         "mcp-ga4",
         "ga4_run_report",
-        { property_id: "331956119", dimension_filter: HUGE_STRING },
+        { property_id: "123456789", dimension_filter: HUGE_STRING },
       );
       expect(isError).toBe(true);
     }, 30_000);
@@ -1086,7 +1088,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
         "mcp-ga4",
         "ga4_run_report",
         {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "date",
           metrics: "sessions",
           start_date: "7daysAgo",
@@ -1166,7 +1168,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
         "mcp-ga4",
         "ga4_run_report",
         {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "date",
           metrics: "sessions",
           start_date: "7daysAgo",
@@ -1182,7 +1184,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
         "mcp-ga4",
         "ga4_run_report",
         {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "date",
           metrics: "sessions",
           start_date: "7daysAgo",
@@ -1198,7 +1200,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
         "mcp-ga4",
         "ga4_run_report",
         {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "date",
           metrics: "sessions",
           start_date: "7daysAgo",
@@ -1263,11 +1265,11 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
     }, 15_000);
 
     it("3I.02 [mcp-google-ads] customer_id with dashes (user format)", async () => {
-      // WHY: Google Ads UI shows "745-851-7309" but API wants "7458517309"
+      // WHY: Google Ads UI shows "123-456-7890" but API wants "1234567890"
       const { isError, text } = await callToolSafely(
         "mcp-google-ads",
         "google_ads_list_campaigns",
-        { customer_id: "745-851-7309" },
+        { customer_id: "123-456-7890" },
       );
       // Should either strip dashes or give clear error
       expect(text.length).toBeGreaterThan(0);
@@ -1376,7 +1378,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
         "mcp-ga4",
         "ga4_run_report",
         {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "date",
           metrics: "sessions",
           start_date: "1711929600",
@@ -1451,7 +1453,7 @@ describe.skipIf(!LIVE)("3. Tool input adversarial tests (LIVE)", () => {
         "mcp-ga4",
         "ga4_run_report",
         {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "eventName",
           metrics: "eventCount",
           start_date: "7daysAgo",
@@ -1565,13 +1567,13 @@ describe.skipIf(!LIVE)("5. Concurrency adversarial tests (LIVE)", () => {
   it("5.03 [mcp-ga4] different tools called simultaneously", async () => {
     const client = await connectLiveServer(SERVERS[5].cwd);
     const calls = [
-      client.callTool({ name: "ga4_list_data_streams", arguments: { property_id: "331956119" } }),
-      client.callTool({ name: "ga4_list_custom_dimensions", arguments: { property_id: "331956119" } }),
-      client.callTool({ name: "ga4_list_custom_metrics", arguments: { property_id: "331956119" } }),
+      client.callTool({ name: "ga4_list_data_streams", arguments: { property_id: "123456789" } }),
+      client.callTool({ name: "ga4_list_custom_dimensions", arguments: { property_id: "123456789" } }),
+      client.callTool({ name: "ga4_list_custom_metrics", arguments: { property_id: "123456789" } }),
       client.callTool({
         name: "ga4_run_report",
         arguments: {
-          property_id: "331956119",
+          property_id: "123456789",
           dimensions: "date",
           metrics: "sessions",
           start_date: "7daysAgo",

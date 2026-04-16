@@ -6,7 +6,7 @@
  *
  * Servers under test:
  *   mcp-google-ads, mcp-gsc, reddit-ad-mcp, mcp-ga4,
- *   neon-one-gtm, mcp-bing-ads, mcp-linkedin-ads
+ *   mcp-gtm-ga4, mcp-bing-ads, mcp-linkedin-ads
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach, beforeAll } from "vitest";
@@ -20,13 +20,13 @@ import { tmpdir } from "os";
 // ============================================
 
 const MCP_SERVERS: Record<string, string> = {
-  "google-ads": resolve("/Users/mark/claude-code/mcps/mcp-google-ads"),
-  "gsc": resolve("/Users/mark/claude-code/mcps/mcp-gsc"),
-  "reddit-ads": resolve("/Users/mark/claude-code/mcps/reddit-ad-mcp"),
-  "ga4": resolve("/Users/mark/claude-code/mcps/mcp-ga4"),
-  "neon-one-gtm": resolve("/Users/mark/claude-code/mcps/neon-one-gtm"),
-  "bing-ads": resolve("/Users/mark/claude-code/mcps/mcp-bing-ads"),
-  "linkedin-ads": resolve("/Users/mark/claude-code/mcps/mcp-linkedin-ads"),
+  "google-ads": resolve(__dirname, "../../mcp-google-ads"),
+  "gsc": resolve(__dirname, "../../mcp-gsc"),
+  "reddit-ads": resolve(__dirname, "../../reddit-ad-mcp"),
+  "ga4": resolve(__dirname, "../../mcp-ga4"),
+  "gtm": resolve(__dirname, "../../neon-one-gtm"),
+  "bing-ads": resolve(__dirname, "../../mcp-bing-ads"),
+  "linkedin-ads": resolve(__dirname, "../../mcp-linkedin-ads"),
 };
 
 /** Build a JSON-RPC 2.0 request */
@@ -216,7 +216,7 @@ describe("Ralph's Adventures", () => {
   // [RALPH] GOOGLE_APPLICATION_CREDENTIALS points to a directory
   // -------------------------------------------
   it("[RALPH] sets GOOGLE_APPLICATION_CREDENTIALS to a directory, not a file", () => {
-    const dirPath = "/Users/mark/claude-code/mcps";
+    const dirPath = resolve(__dirname, "../..");
     expect(statSync(dirPath).isDirectory()).toBe(true);
     // BUG: GSC's validateCredentials checks existsSync but not whether it's a file vs directory
     // The GoogleAuth library will try to readFileSync a directory and get a cryptic error
@@ -270,7 +270,7 @@ describe("Ralph's Adventures", () => {
   // [RALPH] Curly/smart quotes from Word docs
   // -------------------------------------------
   it("[RALPH] uses curly quotes from a Word doc paste", () => {
-    const smartQuoteQuery = '\u201Cflowspace fulfillment\u201D'; // "flowspace fulfillment"
+    const smartQuoteQuery = '\u201Cexample fulfillment\u201D'; // "example fulfillment"
     // The API will receive Unicode curly quotes as the search filter value
     // GSC dimension filter parser looks for ` contains `, ` equals ` etc.
     // The curly quotes in the value itself would work since they're in the expression part
@@ -284,8 +284,8 @@ describe("Ralph's Adventures", () => {
   // -------------------------------------------
   it("[RALPH] sends get_campaigns params to ga4_run_report", () => {
     // GA4 run_report expects property_id, dimensions, metrics, dates
-    // But Ralph sends { customer_id: "7458517309" } which is for Google Ads
-    const wrongParams = { customer_id: "7458517309" };
+    // But Ralph sends { customer_id: "1234567890" } which is for Google Ads
+    const wrongParams = { customer_id: "1234567890" };
     // ga4_run_report: property_id is required per schema, but the switch case just does
     // args?.property_id as string -- which would be undefined, then passed to
     // `properties/undefined` as the GA4 property path
@@ -296,8 +296,8 @@ describe("Ralph's Adventures", () => {
   // -------------------------------------------
   // [RALPH] Passes property_id with dashes (Google Ads format in GA4 field)
   // -------------------------------------------
-  it("[RALPH] passes property_id as '331-956-119' (dashed format) to GA4", () => {
-    const dashedId = "331-956-119";
+  it("[RALPH] passes property_id as '123-456-789' (dashed format) to GA4", () => {
+    const dashedId = "123-456-789";
     // GA4 property path becomes `properties/331-956-119`
     // The GA4 API expects numeric-only property IDs
     // BUG: Google Ads strips dashes from customer_id, but GA4 does NOT strip dashes from property_id
@@ -346,12 +346,12 @@ describe("Ralph's Adventures", () => {
   // -------------------------------------------
   // [RALPH] Wrong platform ID format (Facebook ID in Google Ads)
   // -------------------------------------------
-  it("[RALPH] uses Facebook ad account ID 'act_182822909172279' in Google Ads", () => {
-    const facebookId = "act_182822909172279";
-    // Google Ads expects numeric customer_id like "7458517309"
+  it("[RALPH] uses Facebook ad account ID 'act_123456789012345' in Google Ads", () => {
+    const facebookId = "act_123456789012345";
+    // Google Ads expects numeric customer_id like "1234567890"
     // The server does customerId.replace(/-/g, "") but doesn't strip "act_" prefix
     const cleaned = facebookId.replace(/-/g, "");
-    expect(cleaned).toBe("act_182822909172279"); // Still has act_ prefix
+    expect(cleaned).toBe("act_123456789012345"); // Still has act_ prefix
     // BUG: Google Ads server doesn't validate customer_id format (should be 10-digit numeric)
   });
 
@@ -1051,11 +1051,11 @@ describe("Ender's Attacks", () => {
   it("[ENDER] error handlers include stack traces in MCP response", () => {
     // Every server's catch block: response.details = rawError.stack
     // Stack traces include file paths, which leak server-side directory structure
-    // e.g., "/Users/mark/claude-code/mcps/mcp-google-ads/dist/index.js:142:15"
+    // e.g., "/home/user/projects/mcps/mcp-google-ads/dist/index.js:142:15"
     // BUG: Stack traces in production responses expose internal file paths
     // Not critical for MCP (local use), but bad practice for hosted deployment
-    const fakeStack = "Error: something\n    at Object.<anonymous> (/Users/mark/claude-code/mcps/mcp-google-ads/dist/index.js:142:15)";
-    expect(fakeStack).toContain("/Users/mark");
+    const fakeStack = "Error: something\n    at Object.<anonymous> (/home/user/projects/mcps/mcp-google-ads/dist/index.js:142:15)";
+    expect(fakeStack).toContain("/home/user");
   });
 
   // -------------------------------------------
@@ -1079,10 +1079,10 @@ describe("Ender's Attacks", () => {
   // -------------------------------------------
   it("[ENDER] getClientFromWorkingDir: partial path match via .includes(key)", () => {
     // getClientFromWorkingDir: cwd.includes(key)
-    // If a client key is "neon" and cwd is "/Users/mark/neonatal-research/data"
+    // If a client key is "neon" and cwd is "/home/user/neonatal-research/data"
     // it matches! Because "neonatal-research" includes "neon"
     const key = "neon";
-    const cwd = "/Users/mark/neonatal-research/data";
+    const cwd = "/home/user/neonatal-research/data";
     expect(cwd.includes(key)).toBe(true); // False positive match!
     // BUG: Client resolution via .includes() on short keys can produce false positives
     // This affects GSC, GA4, Bing, LinkedIn, and GTM servers
@@ -1094,24 +1094,24 @@ describe("Ender's Attacks", () => {
   it("[ENDER] LinkedIn uses toLowerCase() in client matching but other servers don't", () => {
     // LinkedIn: cwd.toLowerCase().includes(key)
     // Others: cwd.includes(key) -- case sensitive
-    // If client key is "Flowspace" and cwd is "/Users/mark/flowspace/"
+    // If client key is "Acmecorp" and cwd is "/home/user/acmecorp/"
     // LinkedIn matches, others don't
-    const key = "flowspace";
-    const cwd = "/Users/mark/Flowspace/";
+    const key = "acmecorp";
+    const cwd = "/home/user/Acmecorp/";
     const linkedinMatch = cwd.toLowerCase().includes(key);
     const otherMatch = cwd.includes(key);
     expect(linkedinMatch).toBe(true);
-    // Other servers: "Flowspace" doesn't include lowercase "flowspace" -- case mismatch
+    // Other servers: "Acmecorp" doesn't include lowercase "acmecorp" -- case mismatch
     expect(otherMatch).toBe(false); // Case-sensitive match FAILS
     // The real issue: config keys with mixed case
-    const upperKey = "Flowspace";
-    const cwd2 = "/Users/mark/flowspace/work";
+    const upperKey = "Acmecorp";
+    const cwd2 = "/home/user/acmecorp/work";
     // LinkedIn: cwd.toLowerCase().includes(key) -- but key is the config key, not lowercased
-    // If config key is "Flowspace", cwd "flowspace".toLowerCase().includes("Flowspace") = false!
+    // If config key is "Acmecorp", cwd "acmecorp".toLowerCase().includes("Acmecorp") = false!
     expect(cwd2.toLowerCase().includes(upperKey)).toBe(false); // LinkedIn does NOT lowercase the key!
     // BUG: LinkedIn only lowercases cwd, not the key -- mixed-case config keys can fail to match
     // Wait -- LinkedIn does cwd.toLowerCase().includes(key) where key is the config key
-    // If config key is "flowspace" (lowercase), both approaches match lowercase paths
+    // If config key is "acmecorp" (lowercase), both approaches match lowercase paths
     // The issue is when config key has mixed case
   });
 
@@ -1229,7 +1229,7 @@ describe("Ender's Attacks", () => {
     // BUG: assertSandbox is checking the workspace ID against ITSELF
     // It should be checking a USER-PROVIDED workspace ID against the sandbox ID
     // But the code passes getWorkspaceId() result to assertSandbox, not a user input
-    const indexContent = readFileSync(join(MCP_SERVERS["neon-one-gtm"], "src", "index.ts"), "utf-8");
+    const indexContent = readFileSync(join(MCP_SERVERS["gtm"], "src", "index.ts"), "utf-8");
     expect(indexContent).toContain("this.assertSandbox(await this.getWorkspaceId())");
     // The assertSandbox guard is structurally a no-op as written
   });
