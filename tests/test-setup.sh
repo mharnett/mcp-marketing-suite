@@ -124,23 +124,27 @@ run_setup() {
   # Hermetic PATH: mock dir + system dirs.
   # Prevents real node/npm/uv/pip3 on the host from leaking into tests.
   # Use ${2-default} (single dash) so passing "" gives a truly empty suffix.
-  PATH="$mock_dir:$extra_path" bash "$SETUP_SH" 2>&1 | strip_ansi
+  # Use $BASH (absolute path) so bash itself doesn't require a PATH lookup.
+  PATH="$mock_dir:$extra_path" "$BASH" "$SETUP_SH" 2>&1 | strip_ansi
 }
 
 run_setup_exit() {
   local mock_dir="$1" extra_path="${2-/usr/bin:/bin}"
-  PATH="$mock_dir:$extra_path" bash "$SETUP_SH" > /dev/null 2>&1
+  PATH="$mock_dir:$extra_path" "$BASH" "$SETUP_SH" > /dev/null 2>&1
   echo $?
 }
 
 # Build a minimal mock dir that only contains the non-platform tools setup.sh
 # needs (sed, cut) — used for the "no deps" scenario where we want no Python
-# or Node visible, even if macOS ships /usr/bin/pip3 or /usr/bin/python3.
+# or Node visible.
+# We use PATH="$mock_dir" only (no /bin suffix) so that system python3/node
+# are unreachable. On Ubuntu /bin is a symlink to /usr/bin, so including /bin
+# would expose the real Python. bash builtins (echo, [, test) don't need PATH.
 mock_no_deps() {
   local dir
   dir=$(make_mock_dir)
-  ln -s /usr/bin/sed "$dir/sed"
-  ln -s /usr/bin/cut "$dir/cut"
+  ln -s "$(command -v sed)" "$dir/sed"
+  ln -s "$(command -v cut)" "$dir/cut"
   echo "$dir"
 }
 
@@ -224,10 +228,11 @@ echo ""
 echo "scenario: neither Node.js nor Python available"
 
 mock=$(mock_no_deps)
-# Isolated PATH: mock dir (has sed+cut symlinks) + /bin (has bash, sh, etc.)
-# /usr/bin is excluded so macOS's bundled pip3/python3 can't be found.
-out=$(run_setup "$mock" "/bin")
-exit_code=$(run_setup_exit "$mock" "/bin")
+# Isolated PATH: mock dir only (sed+cut symlinks). No system dirs included so
+# node/python3 are unreachable regardless of platform (/bin -> /usr/bin on Ubuntu).
+# bash builtins (echo, [, test, command) do not require PATH entries.
+out=$(run_setup "$mock" "")
+exit_code=$(run_setup_exit "$mock" "")
 rm -rf "$mock"
 
 assert_exit    "exits non-zero"               1 "$exit_code"
