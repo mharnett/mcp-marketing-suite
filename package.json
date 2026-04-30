@@ -1,0 +1,16 @@
+{
+  "name": "mcp-marketing-suite",
+  "version": "1.0.0",
+  "description": "Suite of MCP servers for performance marketing — install script and docs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mharnett/mcp-marketing-suite.git"
+  },
+  "scripts": {
+    "test": "npm run test:shellcheck && npm run test:setup && npm run test:packages",
+    "test:shellcheck": "shellcheck setup.sh",
+    "test:setup": "bash tests/test-setup.sh",
+    "test:packages": "node tests/check-packages.js"
+  },
+  "license": "MIT"
+}
