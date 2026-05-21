@@ -717,15 +717,10 @@ describe("2. Configuration adversarial tests", () => {
       }
     }, 10_000);
 
-    it("2D.02 [mcp-google-ads] - config.json with correct JSON but wrong schema", async () => {
-      // WHY: User creates config.json but wrong structure
-      // We test this by temporarily writing then removing
-      const wrongConfig = { wrong_key: "wrong_value", clients: null };
-      const configPath = join(TMP_DIR, "gads-wrong-schema.json");
-      writeFileSync(configPath, JSON.stringify(wrongConfig));
-      // Can't easily inject config path, but document the expected behavior
-      expect(true).toBe(true); // Placeholder -- real test needs config path override
-    });
+    // Placeholder: real test requires a config-path override that doesn't yet exist
+    // in mcp-google-ads. Tracked as a todo so it doesn't masquerade as a passing
+    // assertion ("expect(true).toBe(true)" was the original body).
+    it.todo("2D.02 [mcp-google-ads] - config.json with correct JSON but wrong schema");
 
     it("2D.03 - config.json with null values vs empty strings", () => {
       // WHY: undefined vs null vs "" behave differently in JS

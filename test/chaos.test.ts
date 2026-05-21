@@ -1339,9 +1339,10 @@ describe("Protocol-level tests (spawn servers)", () => {
 
     // Find the response to our tool call (id=1)
     const toolResponse = responses.find((r: any) => r.id === 1);
-    if (toolResponse) {
-      expect(toolResponse.error || toolResponse.result?.isError).toBeTruthy();
-    }
+    // Unconditional: an unknown-tool call must produce a response with an error
+    // signal. Silent miss (no response) is itself a failure.
+    expect(toolResponse, "expected a JSON-RPC response with id=1").toBeDefined();
+    expect(toolResponse.error || toolResponse.result?.isError).toBeTruthy();
   }, 10000);
 
   // Test GA4 server if built
@@ -1366,11 +1367,10 @@ describe("Protocol-level tests (spawn servers)", () => {
     }).filter(Boolean);
 
     const toolResponse = responses.find((r: any) => r.id === 2);
-    // Should get an error response, not hang
-    if (toolResponse) {
-      const result = toolResponse.result || toolResponse.error;
-      expect(result).toBeTruthy();
-    }
+    // Unconditional: server must reply (with result OR error) rather than hang.
+    expect(toolResponse, "expected a JSON-RPC response with id=2").toBeDefined();
+    const result = toolResponse.result || toolResponse.error;
+    expect(result).toBeTruthy();
   }, 12000);
 
   // Test Google Ads server if built
@@ -1427,21 +1427,27 @@ describe("Protocol-level tests (spawn servers)", () => {
       // stdin might already be closed -- that's expected
     }
 
-    const exitCode = await new Promise<number | null>((resolve) => {
+    const start = Date.now();
+    let sigkillFired = false;
+    const exitResult = await new Promise<{ code: number | null; signal: NodeJS.Signals | null }>((resolve) => {
       const timer = setTimeout(() => {
+        sigkillFired = true;
         child.kill("SIGKILL");
-        resolve(null);
+        resolve({ code: null, signal: null });
       }, 3000);
-      child.on("close", (code) => {
+      child.on("close", (code, signal) => {
         clearTimeout(timer);
-        resolve(code);
+        resolve({ code, signal });
       });
     });
+    const elapsed = Date.now() - start;
 
-    // Server should exit (cleanly or not) -- the point is it shouldn't hang forever
-    // exitCode can be null if killed by signal (which is the expected behavior for SIGTERM)
-    // The real test: did we reach this point without the 3-second SIGKILL timer firing?
-    expect(true).toBe(true); // If we got here, the server didn't hang
+    // The server must exit in response to SIGTERM, not hang until the 3s SIGKILL fallback fires.
+    expect(sigkillFired).toBe(false);
+    expect(elapsed).toBeLessThan(3000);
+    // After a SIGTERM exit, either the close event reported a code or a signal --
+    // both are acceptable, but we did receive an exit event.
+    expect(exitResult.code !== null || exitResult.signal !== null).toBe(true);
   }, 10000);
 });
 
