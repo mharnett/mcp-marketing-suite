@@ -8,8 +8,10 @@ const NPM_PACKAGES = [
   "mcp-google-ads",
   "mcp-bing-ads",
   "mcp-linkedin-ads",
+  "mcp-reddit-ads",
   "mcp-ga4",
   "mcp-google-gsc",
+  "mcp-gtm-ga4",
 ];
 
 const PYPI_PACKAGES = ["meta-ads-mcp"];

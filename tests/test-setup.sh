@@ -168,12 +168,16 @@ assert_contains "detects Node.js"         "Node.js 20.11.0"       "$out"
 assert_contains "uses uv"                 "uv found"               "$out"
 assert_contains "installs mcp-google-ads" "✓ mcp-google-ads"       "$out"
 assert_contains "installs mcp-bing-ads"   "✓ mcp-bing-ads"         "$out"
+assert_contains "installs mcp-reddit-ads" "✓ mcp-reddit-ads"       "$out"
+assert_contains "installs mcp-gtm-ga4"    "✓ mcp-gtm-ga4"          "$out"
 assert_contains "installs meta-ads-mcp"   "✓ meta-ads-mcp"         "$out"
 assert_contains "config snippet present"  '"mcpServers"'            "$out"
 assert_contains "google-ads entry"        '"google-ads"'            "$out"
+assert_contains "reddit-ads entry"        '"reddit-ads"'            "$out"
+assert_contains "gtm-ga4 entry"           '"gtm-ga4"'               "$out"
 assert_contains "meta-ads entry"          '"meta-ads"'              "$out"
 assert_contains "path substituted"        "/fake/prefix"            "$out"
-assert_contains "shows 6 of 6 installed"  "6 of 6 MCPs installed"  "$out"
+assert_contains "shows 8 of 8 installed"  "8 of 8 MCPs installed"  "$out"
 
 # ── test: pip3 used when uv absent ────────────────────────────────────────────
 echo ""
@@ -188,7 +192,7 @@ assert_exit    "exits 0"                  0 "$exit_code"
 assert_contains "uses pip3"               "Python 3.11.0 (pip3)"  "$out"
 assert_contains "installs meta-ads-mcp"   "✓ meta-ads-mcp"        "$out"
 assert_contains "meta-ads entry"          '"meta-ads"'             "$out"
-assert_contains "shows 6 of 6 installed"  "6 of 6 MCPs installed" "$out"
+assert_contains "shows 8 of 8 installed"  "8 of 8 MCPs installed" "$out"
 
 # ── test: node not found ───────────────────────────────────────────────────────
 echo ""
@@ -267,7 +271,7 @@ assert_contains "flags failed package"      "mcp-bing-ads (install failed)" "$ou
 assert_contains "google-ads still succeeds" '"google-ads"'                   "$out"
 assert_not_contains "no bing-ads entry"     '"bing-ads"'                     "$out"
 assert_contains "meta-ads still installs"   "✓ meta-ads-mcp"                 "$out"
-assert_contains "shows 5 of 6"              "5 of 6 MCPs installed"          "$out"
+assert_contains "shows 7 of 8"              "7 of 8 MCPs installed"          "$out"
 
 # ── test: config snippet path substitution ─────────────────────────────────────
 echo ""

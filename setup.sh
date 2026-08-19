@@ -2,7 +2,7 @@
 set -e
 
 # MCP Marketing Suite installer
-# Installs all six MCPs and prints a Claude config snippet.
+# Installs all eight MCPs and prints a Claude config snippet.
 
 RED='\033[0;31m'
 GREEN='\033[0;32m'
@@ -34,7 +34,7 @@ if command -v node &>/dev/null; then
     warn "Node.js $NODE_VERSION found but ≥18 is required"
   fi
 else
-  warn "Node.js not found — skipping npm MCPs (Google Ads, Bing Ads, LinkedIn, GA4, GSC)"
+  warn "Node.js not found — skipping npm MCPs (Google Ads, Bing Ads, LinkedIn, Reddit, GA4, GSC, GTM+GA4)"
 fi
 
 if command -v npm &>/dev/null; then
@@ -78,7 +78,7 @@ NPM_FAILED=()
 if [ "$HAS_NODE" = true ] && [ "$HAS_NPM" = true ]; then
   hdr "Installing npm MCPs"
 
-  for pkg in mcp-google-ads mcp-bing-ads mcp-linkedin-ads mcp-ga4 mcp-google-gsc; do
+  for pkg in mcp-google-ads mcp-bing-ads mcp-linkedin-ads mcp-reddit-ads mcp-ga4 mcp-google-gsc mcp-gtm-ga4; do
     if npm install -g "$pkg" &>/dev/null; then
       ok "$pkg"
       NPM_INSTALLED+=("$pkg")
@@ -176,6 +176,21 @@ EOF
   )")
 fi
 
+if [[ " ${NPM_INSTALLED[*]} " =~ " mcp-reddit-ads " ]]; then
+  ENTRIES+=("$(cat <<'EOF'
+    "reddit-ads": {
+      "command": "node",
+      "args": ["NMBIN/mcp-reddit-ads/dist/index.js"],
+      "env": {
+        "REDDIT_CLIENT_ID": "YOUR_CLIENT_ID",
+        "REDDIT_CLIENT_SECRET": "YOUR_CLIENT_SECRET",
+        "REDDIT_REFRESH_TOKEN": "YOUR_REFRESH_TOKEN"
+      }
+    }
+EOF
+  )")
+fi
+
 if [[ " ${NPM_INSTALLED[*]} " =~ " mcp-ga4 " ]]; then
   ENTRIES+=("$(cat <<'EOF'
     "ga4": {
@@ -196,6 +211,22 @@ if [[ " ${NPM_INSTALLED[*]} " =~ " mcp-google-gsc " ]]; then
       "command": "node",
       "args": ["NMBIN/mcp-google-gsc/dist/index.js"],
       "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/service-account.json"
+      }
+    }
+EOF
+  )")
+fi
+
+if [[ " ${NPM_INSTALLED[*]} " =~ " mcp-gtm-ga4 " ]]; then
+  ENTRIES+=("$(cat <<'EOF'
+    "gtm-ga4": {
+      "command": "node",
+      "args": ["NMBIN/mcp-gtm-ga4/dist/index.js"],
+      "env": {
+        "GTM_ACCOUNT_ID": "YOUR_ACCOUNT_ID",
+        "GTM_CONTAINER_ID": "YOUR_CONTAINER_ID",
+        "GA4_PROPERTY_ID": "YOUR_PROPERTY_ID",
         "GOOGLE_APPLICATION_CREDENTIALS": "/path/to/service-account.json"
       }
     }
@@ -240,7 +271,7 @@ hdr "Summary"
 TOTAL_INSTALLED=$(( ${#NPM_INSTALLED[@]} + ${#PIP_INSTALLED[@]} ))
 TOTAL_FAILED=$(( ${#NPM_FAILED[@]} + ${#PIP_FAILED[@]} ))
 
-echo "$TOTAL_INSTALLED of 6 MCPs installed."
+echo "$TOTAL_INSTALLED of 8 MCPs installed."
 
 if [ $TOTAL_FAILED -gt 0 ]; then
   echo ""
