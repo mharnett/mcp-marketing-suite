@@ -50,7 +50,7 @@ const SERVERS = [
   },
   {
     name: "mcp-gtm-ga4",
-    cwd: "/Users/mark/claude-code/mcps/neon-one-gtm",
+    cwd: "/Users/mark/claude-code/mcps/mcp-gtm-ga4",
     minTools: 13,
     requiredTools: [
       "gtm_list_tags",

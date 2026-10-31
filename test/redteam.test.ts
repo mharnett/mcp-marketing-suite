@@ -188,7 +188,7 @@ const SERVERS: ServerDef[] = [
   },
   {
     pkg: "mcp-gtm-ga4",
-    cwd: join(MCP_ROOT, "neon-one-gtm"),
+    cwd: join(MCP_ROOT, "mcp-gtm-ga4"),
     tools: [
       "gtm_list_tags",
       "gtm_get_tag",

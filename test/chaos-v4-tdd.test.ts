@@ -111,14 +111,14 @@ const SERVERS: ServerMeta[] = [
   },
   {
     key: "gtm-ga4", pkg: "mcp-gtm-ga4",
-    dir: join(MCP_ROOT, "neon-one-gtm"),
-    srcDir: join(MCP_ROOT, "neon-one-gtm/src"),
-    indexFile: join(MCP_ROOT, "neon-one-gtm/src/index.ts"),
-    toolsFile: join(MCP_ROOT, "neon-one-gtm/src/tools.ts"),
-    errorsFile: join(MCP_ROOT, "neon-one-gtm/src/errors.ts"),
-    resilienceFile: join(MCP_ROOT, "neon-one-gtm/src/resilience.ts"),
-    readmePath: join(MCP_ROOT, "neon-one-gtm/README.md"),
-    packageJson: join(MCP_ROOT, "neon-one-gtm/package.json"),
+    dir: join(MCP_ROOT, "mcp-gtm-ga4"),
+    srcDir: join(MCP_ROOT, "mcp-gtm-ga4/src"),
+    indexFile: join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"),
+    toolsFile: join(MCP_ROOT, "mcp-gtm-ga4/src/tools.ts"),
+    errorsFile: join(MCP_ROOT, "mcp-gtm-ga4/src/errors.ts"),
+    resilienceFile: join(MCP_ROOT, "mcp-gtm-ga4/src/resilience.ts"),
+    readmePath: join(MCP_ROOT, "mcp-gtm-ga4/README.md"),
+    packageJson: join(MCP_ROOT, "mcp-gtm-ga4/package.json"),
   },
 ];
 

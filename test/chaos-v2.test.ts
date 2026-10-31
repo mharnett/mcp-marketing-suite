@@ -96,12 +96,12 @@ const SERVERS: ServerMeta[] = [
   {
     key: "gtm-ga4",
     pkg: "mcp-gtm-ga4",
-    dir: join(MCP_ROOT, "neon-one-gtm"),
-    toolsFile: join(MCP_ROOT, "neon-one-gtm/src/tools.ts"),
-    errorsFile: join(MCP_ROOT, "neon-one-gtm/src/errors.ts"),
-    indexFile: join(MCP_ROOT, "neon-one-gtm/src/index.ts"),
-    readmePath: join(MCP_ROOT, "neon-one-gtm/README.md"),
-    resilienceFile: join(MCP_ROOT, "neon-one-gtm/src/resilience.ts"),
+    dir: join(MCP_ROOT, "mcp-gtm-ga4"),
+    toolsFile: join(MCP_ROOT, "mcp-gtm-ga4/src/tools.ts"),
+    errorsFile: join(MCP_ROOT, "mcp-gtm-ga4/src/errors.ts"),
+    indexFile: join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"),
+    readmePath: join(MCP_ROOT, "mcp-gtm-ga4/README.md"),
+    resilienceFile: join(MCP_ROOT, "mcp-gtm-ga4/src/resilience.ts"),
   },
 ];
 
@@ -271,7 +271,7 @@ describe("A. Ralph Follows the README", () => {
     // Check if any of them validate that it's a path vs raw JSON.
     const ga4Index = readFileSync(join(MCP_ROOT, "mcp-ga4/src/index.ts"), "utf-8");
     const gscIndex = readFileSync(join(MCP_ROOT, "mcp-gsc/src/index.ts"), "utf-8");
-    const gtmIndex = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/index.ts"), "utf-8");
+    const gtmIndex = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"), "utf-8");
 
     // All three pass the value to keyFile: in GoogleAuth options
     // BUG: None validate that the value is a valid file path before passing it.
@@ -298,7 +298,7 @@ describe("A. Ralph Follows the README", () => {
     // The GTM server's auth subcommand explicitly creates authorized_user format:
     // { type: "authorized_user", client_id, client_secret, refresh_token }
     // But GA4 and GSC use service account (keyFile). Do they also accept authorized_user?
-    const gtmIndex = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/index.ts"), "utf-8");
+    const gtmIndex = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"), "utf-8");
     // GTM auth creates authorized_user format
     expect(gtmIndex).toContain('"authorized_user"');
 
@@ -504,7 +504,7 @@ describe("B. Ender Attacks Cross-MCP Assumptions", () => {
   // TEST 12: [ENDER] Tool name collision audit v2 -- prefix collisions
   it("[ENDER] #12a - ga4_run_report exists in BOTH mcp-ga4 AND mcp-gtm-ga4", () => {
     const ga4Tools = extractToolNames(join(MCP_ROOT, "mcp-ga4/src/tools.ts"));
-    const gtmTools = extractToolNames(join(MCP_ROOT, "neon-one-gtm/src/tools.ts"));
+    const gtmTools = extractToolNames(join(MCP_ROOT, "mcp-gtm-ga4/src/tools.ts"));
 
     const ga4Set = new Set(ga4Tools);
     const gtmSet = new Set(gtmTools);
@@ -613,7 +613,7 @@ describe("B. Ender Attacks Cross-MCP Assumptions", () => {
     expect(ga4Index).toContain("const config = loadConfig()");
 
     // GTM: reads directly from process.env at module level
-    const gtmIndex = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/index.ts"), "utf-8");
+    const gtmIndex = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"), "utf-8");
     expect(gtmIndex).toContain('const CREDS_FILE = process.env.GOOGLE_APPLICATION_CREDENTIALS');
 
     // Good: all three cache at startup. Changing env var mid-operation won't affect them.
@@ -1128,7 +1128,7 @@ describe("F. Deep Structural Analysis", () => {
 
     it("[ENDER] #37 - GTM has NO validateCredentials function", () => {
       // BUG: GTM errors.ts also doesn't have validateCredentials
-      const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/errors.ts"), "utf-8");
+      const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/errors.ts"), "utf-8");
       expect(src).not.toContain("validateCredentials");
       // GTM reads env vars directly -- no startup validation
     });
@@ -1161,7 +1161,7 @@ describe("F. Deep Structural Analysis", () => {
   // TEST 45-51: [ENDER] safeResponse truncation key coverage
   describe("#45-51 - safeResponse knows about each server's response shape", () => {
     it("[ENDER] #45 - GTM safeResponse has extra keys (tags, triggers, variables)", () => {
-      const gtmSrc = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/resilience.ts"), "utf-8");
+      const gtmSrc = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/resilience.ts"), "utf-8");
       // GTM returns { tags: [...] }, { triggers: [...] }, { variables: [...] }
       expect(gtmSrc).toContain('"tags"');
       expect(gtmSrc).toContain('"triggers"');
@@ -1185,7 +1185,7 @@ describe("F. Deep Structural Analysis", () => {
     });
 
     it("[ENDER] #48 - GTM safeResponse updates count/row_count on truncation", () => {
-      const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/resilience.ts"), "utf-8");
+      const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/resilience.ts"), "utf-8");
       // GTM uniquely updates count fields after truncation
       expect(src).toContain('obj.count = obj[key].length');
       expect(src).toContain('obj.truncated = true');
@@ -1282,7 +1282,7 @@ describe("G. Consent Module (GTM-specific)", () => {
 
   // TEST 61: [ENDER] classifyTag coverage for known tag types
   it("[ENDER] #61 - classifyTag handles all documented Google tag types", () => {
-    const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/consent.ts"), "utf-8");
+    const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/consent.ts"), "utf-8");
 
     // Google Ad tag types
     expect(src).toContain("awct");  // Google Ads Conversion Tracking
@@ -1303,7 +1303,7 @@ describe("G. Consent Module (GTM-specific)", () => {
 
   // TEST 62: [ENDER] classifyTag HTML tag name matching
   it("[ENDER] #62 - classifyTag ad name patterns cover common vendors", () => {
-    const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/consent.ts"), "utf-8");
+    const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/consent.ts"), "utf-8");
 
     // Verify all common ad platform names are checked
     const expectedPatterns = [
@@ -1317,13 +1317,13 @@ describe("G. Consent Module (GTM-specific)", () => {
 
   // TEST 63: [ENDER] classifyTag returns "review_manually" for unknown types
   it("[ENDER] #63 - Unknown tag types get 'review_manually' recommendation", () => {
-    const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/consent.ts"), "utf-8");
+    const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/consent.ts"), "utf-8");
     expect(src).toContain('"review_manually"');
   });
 
   // TEST 64: [ENDER] SafetyError is separate from classifyError
   it("[ENDER] #64 - GTM SafetyError bypasses classifyError in the handler", () => {
-    const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/index.ts"), "utf-8");
+    const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"), "utf-8");
     // SafetyError is caught BEFORE classifyError in the catch block
     expect(src).toContain("instanceof SafetyError");
   });
@@ -1359,9 +1359,9 @@ describe("H. Suite-Level Consistency", () => {
       if (server.key === "gtm-ga4") {
         // GTM uses env var for server name with default
         expect(src).toContain('MCP_SERVER_NAME');
-        // BUG: Default server name "neon-one-gtm" doesn't match npm package name "mcp-gtm-ga4"
+        // BUG: Default server name "client-gtm" doesn't match npm package name "mcp-gtm-ga4"
         expect(pkgJson.name).toBe("mcp-gtm-ga4");
-        mismatches.push({ server: server.key, mcpName: "neon-one-gtm (default)", pkgName: pkgJson.name });
+        mismatches.push({ server: server.key, mcpName: "client-gtm (default)", pkgName: pkgJson.name });
       } else if (nameMatch) {
         if (nameMatch[1] !== pkgJson.name) {
           // BUG: MCP server name doesn't match npm package name
@@ -1371,7 +1371,7 @@ describe("H. Suite-Level Consistency", () => {
     }
 
     // BUG: GSC registers as "mcp-gsc" but npm package is "mcp-google-gsc"
-    // BUG: GTM defaults to "neon-one-gtm" but npm package is "mcp-gtm-ga4"
+    // BUG: GTM defaulted to a client-named server ("client-gtm") but npm package is "mcp-gtm-ga4"
     expect(mismatches.length).toBeGreaterThanOrEqual(2);
     expect(mismatches.some(m => m.server === "gsc")).toBe(true);
     expect(mismatches.some(m => m.server === "gtm-ga4")).toBe(true);
@@ -1519,7 +1519,7 @@ describe("I. Advanced Injection & Edge Cases", () => {
   // TEST 87: [ENDER] GA4 dimension filter only supports == operator
   it("[ENDER] #87 - GA4 dimension filter only supports equality (==)", () => {
     const ga4Src = readFileSync(join(MCP_ROOT, "mcp-ga4/src/index.ts"), "utf-8");
-    const gtmSrc = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/index.ts"), "utf-8");
+    const gtmSrc = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"), "utf-8");
 
     // Both GA4 implementations only check for "=="
     expect(ga4Src).toContain('.includes("==")');
@@ -1599,7 +1599,7 @@ describe("J. Documentation Accuracy", () => {
   });
 
   it("[RALPH] #97 - mcp-gtm-ga4 claims 13 tools", () => {
-    const tools = extractToolNames(join(MCP_ROOT, "neon-one-gtm/src/tools.ts"));
+    const tools = extractToolNames(join(MCP_ROOT, "mcp-gtm-ga4/src/tools.ts"));
     expect(tools.length).toBe(13);
   });
 
@@ -1756,7 +1756,7 @@ describe("K. Additional Edge Cases", () => {
 
   // TEST 109: [ENDER] GTM workspace sandbox assertion
   it("[ENDER] #109 - GTM write operations check workspace via assertSandbox", () => {
-    const src = readFileSync(join(MCP_ROOT, "neon-one-gtm/src/index.ts"), "utf-8");
+    const src = readFileSync(join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"), "utf-8");
     expect(src).toContain("assertSandbox");
     // Verify it's called before write ops
     const writeOps = ["updateTag", "createTag", "preview", "createVersion"];
