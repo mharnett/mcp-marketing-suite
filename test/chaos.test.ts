@@ -24,7 +24,7 @@ const MCP_SERVERS: Record<string, string> = {
   "gsc": resolve(__dirname, "../../mcp-gsc"),
   "reddit-ads": resolve(__dirname, "../../reddit-ad-mcp"),
   "ga4": resolve(__dirname, "../../mcp-ga4"),
-  "gtm": resolve(__dirname, "../../neon-one-gtm"),
+  "gtm": resolve(__dirname, "../../mcp-gtm-ga4"),
   "bing-ads": resolve(__dirname, "../../mcp-bing-ads"),
   "linkedin-ads": resolve(__dirname, "../../mcp-linkedin-ads"),
 };

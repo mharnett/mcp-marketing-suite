@@ -19,7 +19,7 @@ const SERVERS = [
   { name: "mcp-google-gsc", cwd: "/Users/mark/claude-code/mcps/mcp-gsc" },
   { name: "mcp-reddit-ads", cwd: "/Users/mark/claude-code/mcps/reddit-ad-mcp" },
   { name: "mcp-ga4", cwd: "/Users/mark/claude-code/mcps/mcp-ga4" },
-  { name: "mcp-gtm-ga4", cwd: "/Users/mark/claude-code/mcps/neon-one-gtm" },
+  { name: "mcp-gtm-ga4", cwd: "/Users/mark/claude-code/mcps/mcp-gtm-ga4" },
 ];
 
 // ============================================================

@@ -106,14 +106,14 @@ const SERVERS: ServerMeta[] = [
   },
   {
     key: "gtm-ga4", pkg: "mcp-gtm-ga4",
-    dir: join(MCP_ROOT, "neon-one-gtm"),
-    srcDir: join(MCP_ROOT, "neon-one-gtm/src"),
-    indexFile: join(MCP_ROOT, "neon-one-gtm/src/index.ts"),
-    toolsFile: join(MCP_ROOT, "neon-one-gtm/src/tools.ts"),
-    errorsFile: join(MCP_ROOT, "neon-one-gtm/src/errors.ts"),
-    resilienceFile: join(MCP_ROOT, "neon-one-gtm/src/resilience.ts"),
-    readmePath: join(MCP_ROOT, "neon-one-gtm/README.md"),
-    packageJson: join(MCP_ROOT, "neon-one-gtm/package.json"),
+    dir: join(MCP_ROOT, "mcp-gtm-ga4"),
+    srcDir: join(MCP_ROOT, "mcp-gtm-ga4/src"),
+    indexFile: join(MCP_ROOT, "mcp-gtm-ga4/src/index.ts"),
+    toolsFile: join(MCP_ROOT, "mcp-gtm-ga4/src/tools.ts"),
+    errorsFile: join(MCP_ROOT, "mcp-gtm-ga4/src/errors.ts"),
+    resilienceFile: join(MCP_ROOT, "mcp-gtm-ga4/src/resilience.ts"),
+    readmePath: join(MCP_ROOT, "mcp-gtm-ga4/README.md"),
+    packageJson: join(MCP_ROOT, "mcp-gtm-ga4/package.json"),
   },
 ];
 
@@ -1254,7 +1254,7 @@ describe("[COMBINED] Real-World Disaster Scenarios", () => {
 
   // --------------------------------------------------------
   // TEST 50 [RED] - README re-auth instructions reference specific accounts
-  // WHY THIS MATTERS: If README says "authenticate as mark@drakmarketing.com",
+  // WHY THIS MATTERS: If README says "authenticate as <a named personal address>",
   // Ralph at company.com can't follow those instructions. RE-auth instructions
   // should be generic with placeholders.
   // --------------------------------------------------------
@@ -1608,7 +1608,7 @@ describe("[ENDER] MCP Protocol Compliance", () => {
 
   // --------------------------------------------------------
   // TEST 65 [RED] - GTM and GA4 servers have overlapping tool names
-  // WHY THIS MATTERS: neon-one-gtm server has tools like "gtm_ga4_run_report"
+  // WHY THIS MATTERS: mcp-gtm-ga4 server has tools like "gtm_ga4_run_report"
   // and standalone mcp-ga4 has "ga4_run_report". When BOTH are loaded,
   // Claude sees two tools with similar names and may call the wrong one.
   // --------------------------------------------------------
