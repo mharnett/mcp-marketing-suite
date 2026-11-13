@@ -1,0 +1,44 @@
+{
+  "name": "mcp-marketing-suite",
+  "description": "MCP servers for performance marketing. Install only the platforms you use.",
+  "owner": {
+    "name": "Mark Harnett"
+  },
+  "plugins": [
+    {
+      "name": "google-ads",
+      "source": "./plugins/google-ads",
+      "description": "Google Ads: campaigns, reporting and optimization, read-only by default."
+    },
+    {
+      "name": "bing-ads",
+      "source": "./plugins/bing-ads",
+      "description": "Microsoft Advertising: campaigns, search terms and reporting."
+    },
+    {
+      "name": "linkedin-ads",
+      "source": "./plugins/linkedin-ads",
+      "description": "LinkedIn Ads: campaign management and reporting."
+    },
+    {
+      "name": "reddit-ads",
+      "source": "./plugins/reddit-ads",
+      "description": "Reddit Ads: campaign management and reporting."
+    },
+    {
+      "name": "ga4",
+      "source": "./plugins/ga4",
+      "description": "Google Analytics 4: reports and property data."
+    },
+    {
+      "name": "gsc",
+      "source": "./plugins/gsc",
+      "description": "Google Search Console: search performance and indexing data."
+    },
+    {
+      "name": "gtm-ga4",
+      "source": "./plugins/gtm-ga4",
+      "description": "Google Tag Manager and GA4: container audits and tracking checks."
+    }
+  ]
+}

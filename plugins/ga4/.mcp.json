@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "ga4": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-ga4"
+      ],
+      "env": {
+        "GA4_PROPERTY_ID": "${GA4_PROPERTY_ID}",
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}"
+      }
+    }
+  }
+}
