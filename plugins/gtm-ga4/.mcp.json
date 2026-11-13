@@ -1,0 +1,17 @@
+{
+  "mcpServers": {
+    "gtm-ga4": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-gtm-ga4"
+      ],
+      "env": {
+        "GTM_ACCOUNT_ID": "${GTM_ACCOUNT_ID}",
+        "GTM_CONTAINER_ID": "${GTM_CONTAINER_ID}",
+        "GA4_PROPERTY_ID": "${GA4_PROPERTY_ID}",
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}"
+      }
+    }
+  }
+}

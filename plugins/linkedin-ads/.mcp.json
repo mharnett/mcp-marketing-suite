@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "linkedin-ads": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-linkedin-ads"
+      ],
+      "env": {
+        "LINKEDIN_CLIENT_ID": "${LINKEDIN_CLIENT_ID}",
+        "LINKEDIN_CLIENT_SECRET": "${LINKEDIN_CLIENT_SECRET}",
+        "LINKEDIN_REFRESH_TOKEN": "${LINKEDIN_REFRESH_TOKEN}"
+      }
+    }
+  }
+}

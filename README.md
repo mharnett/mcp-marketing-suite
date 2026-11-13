@@ -19,6 +19,17 @@ Built by practitioners running real ad spend across Google, Meta, Microsoft, Lin
 
 **124 tools** across 8 platforms. 7 TypeScript servers on npm, 1 Python server on PyPI.
 
+## Install as Claude Code plugins
+
+Each server is its own plugin, so you install only the platforms you use:
+
+```bash
+claude plugin marketplace add mharnett/mcp-marketing-suite
+claude plugin install google-ads@mcp-marketing-suite
+```
+
+Plugins available: `google-ads`, `bing-ads`, `linkedin-ads`, `reddit-ads`, `ga4`, `gsc`, `gtm-ga4`. Each reads its credentials from environment variables with the names listed in the server's README, so export them before starting Claude Code. The Meta server is Python and is not offered as a plugin.
+
 ## Choose What You Need (Context Matters)
 
 **Don't install all eight.** Each MCP server's tool schemas are loaded into Claude's context window on every conversation. Installing the full suite adds **~50K tokens of overhead** before you type a single message — about 25% of a 200K context window on Claude Desktop, which doesn't yet support deferred tool loading.

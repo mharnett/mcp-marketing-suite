@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "gsc": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "mcp-google-gsc"
+      ],
+      "env": {
+        "GOOGLE_APPLICATION_CREDENTIALS": "${GOOGLE_APPLICATION_CREDENTIALS}"
+      }
+    }
+  }
+}
