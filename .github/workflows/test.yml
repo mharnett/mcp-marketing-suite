@@ -27,3 +27,13 @@ jobs:
 
       - name: Package registry health check
         run: node tests/check-packages.js
+
+      # The README index table is generated from each server's tool list
+      # (scripts/server-table.js). The first step is offline: README.md must
+      # match tool-lists.json. The second reads each server's latest npm
+      # release and fails when tool-lists.json is behind it.
+      - name: README server table matches the tool lists
+        run: node --test tests/server-table.test.js
+
+      - name: Tool lists match each server's latest release
+        run: node scripts/server-table.js check --remote

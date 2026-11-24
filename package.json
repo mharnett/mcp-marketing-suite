@@ -7,12 +7,15 @@
     "url": "https://github.com/mharnett/mcp-marketing-suite.git"
   },
   "scripts": {
-    "test": "npm run test:shellcheck && npm run test:setup && npm run test:manifest && npm run test:packages && npm run test:marketplace",
+    "test": "npm run test:shellcheck && npm run test:setup && npm run test:manifest && npm run test:packages && npm run test:marketplace && npm run test:table",
     "test:shellcheck": "shellcheck setup.sh",
     "test:setup": "bash tests/test-setup.sh",
     "test:manifest": "node tests/test-manifest-sync.js",
     "test:packages": "node tests/check-packages.js",
-    "test:marketplace": "node tests/test-marketplace.js"
+    "test:marketplace": "node tests/test-marketplace.js",
+    "test:table": "node --test tests/server-table.test.js",
+    "table:check": "node scripts/server-table.js check --remote",
+    "table:update": "node scripts/server-table.js update"
   },
   "license": "MIT"
 }
