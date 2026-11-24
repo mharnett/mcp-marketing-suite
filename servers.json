@@ -1,0 +1,81 @@
+{
+  "tokensPerTool": 400,
+  "servers": [
+    {
+      "package": "mcp-google-ads",
+      "registry": "npm",
+      "platform": "Google Ads",
+      "repo": "mharnett/mcp-google-ads",
+      "tools": { "path": "src/tools.ts" },
+      "setup": "docs/google-ads.md",
+      "summary": "MCC support, GAQL, account picked from the working directory, campaign, keyword and ad management. Read-only by default; new items are created PAUSED."
+    },
+    {
+      "package": "mcp-bing-ads",
+      "registry": "npm",
+      "platform": "Microsoft Advertising",
+      "repo": "mharnett/mcp-bing-ads",
+      "tools": { "path": "src/tools.ts" },
+      "setup": "docs/bing-ads.md",
+      "summary": "Campaign and keyword performance reports, shared negative keyword lists."
+    },
+    {
+      "package": "mcp-linkedin-ads",
+      "registry": "npm",
+      "platform": "LinkedIn Ads",
+      "repo": "mharnett/mcp-linkedin-ads",
+      "tools": { "path": "src/tools.ts" },
+      "setup": "docs/linkedin-ads.md",
+      "summary": "Campaign Manager campaigns, ad groups and creatives, with performance reporting."
+    },
+    {
+      "package": "mcp-reddit-ads",
+      "registry": "npm",
+      "platform": "Reddit Ads",
+      "repo": "mharnett/mcp-reddit-ads",
+      "tools": { "path": "src/tools.ts" },
+      "summary": "Campaigns, ad groups and ads on the Reddit Ads API v3; subreddit and interest targeting; budgets in dollars."
+    },
+    {
+      "package": "meta-ads-mcp",
+      "registry": "pypi",
+      "platform": "Meta (Facebook/Instagram)",
+      "repo": "pipeboard-co/meta-ads-mcp",
+      "tools": null,
+      "notCountedReason": "it is a third-party Python server by Pipeboard, and the tools it registers change with its own environment flags",
+      "setup": "docs/meta-ads.md",
+      "summary": "Third-party (Pipeboard). Campaign creation, audience targeting, creatives and performance insights."
+    },
+    {
+      "package": "mcp-ga4",
+      "registry": "npm",
+      "platform": "Google Analytics 4",
+      "repo": "mharnett/mcp-ga4",
+      "tools": { "path": "src/tools.ts" },
+      "setup": "docs/ga4.md",
+      "summary": "Historical and realtime reports, custom dimension and metric management."
+    },
+    {
+      "package": "mcp-google-gsc",
+      "registry": "npm",
+      "platform": "Google Search Console",
+      "repo": "mharnett/mcp-search-console",
+      "tools": { "path": "src/tools.ts" },
+      "setup": "docs/gsc.md",
+      "summary": "Search analytics with query, page, device and country filters; URL inspection; site listing."
+    },
+    {
+      "package": "mcp-gtm-ga4",
+      "registry": "npm",
+      "platform": "Google Tag Manager + GA4",
+      "repo": "mharnett/mcp-gtm-ga4",
+      "tools": { "path": "src/tools.ts" },
+      "summary": "Tags, triggers and variables in a sandbox workspace, consent audit, preview and versions."
+    }
+  ],
+  "profiles": [
+    { "name": "Google-only practitioner", "servers": ["mcp-google-ads", "mcp-ga4", "mcp-google-gsc"] },
+    { "name": "Cross-channel paid media manager", "servers": ["mcp-google-ads", "meta-ads-mcp", "mcp-ga4", "mcp-google-gsc"] },
+    { "name": "Full agency stack, only if you run all five ad platforms", "servers": "all" }
+  ]
+}
