@@ -8,7 +8,7 @@
       "repo": "mharnett/mcp-google-ads",
       "tools": { "path": "src/tools.ts" },
       "setup": "docs/google-ads.md",
-      "summary": "MCC support, GAQL, account picked from the working directory, campaign, keyword and ad management. Read-only by default; new items are created PAUSED."
+      "summary": "MCC support, GAQL, account picked from the working directory, campaign, keyword and ad management. Read-only by default; new campaigns, ad groups, ads and keywords are created PAUSED."
     },
     {
       "package": "mcp-bing-ads",
