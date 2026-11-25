@@ -2,7 +2,7 @@
 
 Run your ad accounts, analytics and tags from one Claude conversation. Eight Model Context Protocol (MCP) servers cover Google Ads, Microsoft Advertising, LinkedIn, Reddit, Meta, Google Analytics 4 (GA4), Search Console and Google Tag Manager (GTM): pull spend from three platforms, audit search terms and check tracking without switching between UIs.
 
-Built by practitioners running real ad spend. Safe by default: write operations create items in PAUSED state, so nothing new serves until you turn it on.
+Built by practitioners running real ad spend. Safe by default: in the first-party servers, write tools are off until you turn them on, and the Google Ads and Reddit servers create new campaigns, ad groups and ads PAUSED. Other ad-platform writes, such as bids, budgets and negative keywords, apply when the tool runs.
 
 ```bash
 claude plugin marketplace add mharnett/mcp-marketing-suite
@@ -47,14 +47,14 @@ Worked conversations: [weekly PPC review](examples/weekly-ppc-review.md) (Google
 
 | Server | Platform | Tools | ~Context cost | Release | Install | Setup | What it does |
 |--------|----------|-------|---------------|---------|---------|-------|--------------|
-| [mcp-google-ads](https://github.com/mharnett/mcp-google-ads) | Google Ads | [87](https://github.com/mharnett/mcp-google-ads/blob/99b9085725b6373874b6971ce57e7cd9e32e65e3/src/tools.ts) | ~35K tokens | 1.15.0 | `npm install mcp-google-ads` | [setup](docs/google-ads.md) | MCC support, GAQL, account picked from the working directory, campaign, keyword and ad management. Read-only by default; new items are created PAUSED. |
+| [mcp-google-ads](https://github.com/mharnett/mcp-google-ads) | Google Ads | [87](https://github.com/mharnett/mcp-google-ads/blob/257b33125d48d6f012f092eb3b9111691061adb9/src/tools.ts) | ~35K tokens | 1.16.1 | `npm install mcp-google-ads` | [setup](docs/google-ads.md) | MCC support, GAQL, account picked from the working directory, campaign, keyword and ad management. Read-only by default; new campaigns, ad groups, ads and keywords are created PAUSED. |
 | [mcp-bing-ads](https://github.com/mharnett/mcp-bing-ads) | Microsoft Advertising | [13](https://github.com/mharnett/mcp-bing-ads/blob/a3dac6d8ee5f62567bbdcfaeb7624ef43730479b/src/tools.ts) | ~5K tokens | 1.3.4 | `npm install mcp-bing-ads` | [setup](docs/bing-ads.md) | Campaign and keyword performance reports, shared negative keyword lists. |
 | [mcp-linkedin-ads](https://github.com/mharnett/mcp-linkedin-ads) | LinkedIn Ads | [11](https://github.com/mharnett/mcp-linkedin-ads/blob/f2f15153d2a87d4b88b7773a80c7d2f581c4073c/src/tools.ts) | ~4K tokens | 1.2.2 | `npm install mcp-linkedin-ads` | [setup](docs/linkedin-ads.md) | Campaign Manager campaigns, ad groups and creatives, with performance reporting. |
-| [mcp-reddit-ads](https://github.com/mharnett/mcp-reddit-ads) | Reddit Ads | [18](https://github.com/mharnett/mcp-reddit-ads/blob/89cd8f3656376933d2991132cf6890542aceee4e/src/tools.ts) | ~7K tokens | 1.1.3 | `npm install mcp-reddit-ads` | [README](https://github.com/mharnett/mcp-reddit-ads#readme) | Campaigns, ad groups and ads on the Reddit Ads API v3; subreddit and interest targeting; budgets in dollars. |
+| [mcp-reddit-ads](https://github.com/mharnett/mcp-reddit-ads) | Reddit Ads | [18](https://github.com/mharnett/mcp-reddit-ads/blob/d4a2030bda8cca343f9558afb1e7f73229d951bb/src/tools.ts) | ~7K tokens | 1.1.4 | `npm install mcp-reddit-ads` | [README](https://github.com/mharnett/mcp-reddit-ads#readme) | Campaigns, ad groups and ads on the Reddit Ads API v3; subreddit and interest targeting; budgets in dollars. |
 | [meta-ads-mcp](https://github.com/pipeboard-co/meta-ads-mcp) | Meta (Facebook/Instagram) | not counted | — | — | `pip install meta-ads-mcp` | [setup](docs/meta-ads.md) | Third-party (Pipeboard). Campaign creation, audience targeting, creatives and performance insights. |
-| [mcp-ga4](https://github.com/mharnett/mcp-ga4) | Google Analytics 4 | [9](https://github.com/mharnett/mcp-ga4/blob/eeaebca1d58985572be97491171f332862da1c0d/src/tools.ts) | ~4K tokens | 2.3.1 | `npm install mcp-ga4` | [setup](docs/ga4.md) | Historical and realtime reports, custom dimension and metric management. |
+| [mcp-ga4](https://github.com/mharnett/mcp-ga4) | Google Analytics 4 | [9](https://github.com/mharnett/mcp-ga4/blob/45a5438cd2cca7ce3c554091a9f5e013753e9325/src/tools.ts) | ~4K tokens | 2.3.2 | `npm install mcp-ga4` | [setup](docs/ga4.md) | Historical and realtime reports, custom dimension and metric management. |
 | [mcp-google-gsc](https://github.com/mharnett/mcp-search-console) | Google Search Console | [4](https://github.com/mharnett/mcp-search-console/blob/0947cbec0db17c24df037e545c0816d017bcf069/src/tools.ts) | ~2K tokens | 1.2.2 | `npm install mcp-google-gsc` | [setup](docs/gsc.md) | Search analytics with query, page, device and country filters; URL inspection; site listing. |
-| [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | [18](https://github.com/mharnett/mcp-gtm-ga4/blob/0aa0b55bd5d06e8b9ce106ea7c1068ead52e92e8/src/tools.ts) | ~7K tokens | 1.3.1 | `npm install mcp-gtm-ga4` | [README](https://github.com/mharnett/mcp-gtm-ga4#readme) | Tags, triggers and variables in a sandbox workspace, consent audit, preview and versions. |
+| [mcp-gtm-ga4](https://github.com/mharnett/mcp-gtm-ga4) | Google Tag Manager + GA4 | [18](https://github.com/mharnett/mcp-gtm-ga4/blob/183883617bafe799fa14cf464544f6d7f6b8bf80/src/tools.ts) | ~7K tokens | 1.3.2 | `npm install mcp-gtm-ga4` | [README](https://github.com/mharnett/mcp-gtm-ga4#readme) | Tags, triggers and variables in a sandbox workspace, consent audit, preview and versions. |
 
 **160 tools** across the 7 first-party servers, counted from each one's latest npm release. Context cost assumes ~400 tokens per tool schema.
 
@@ -155,7 +155,7 @@ All TypeScript servers share a consistent architecture:
 - **Pino** for structured JSON logging
 - **200KB response truncation** to prevent context window overflow
 - **Error classification** into auth, rate limit, and service errors with actionable messages
-- **Safe by default** -- write operations create items in PAUSED state
+- **Read-only by default** -- write tools stay off until you set the server's write switch (an environment variable ending in `_MCP_WRITE`); once on, Google Ads and Reddit create new campaigns, ad groups and ads PAUSED, and other writes apply when the tool runs (Tag Manager edits stay in a workspace until you publish it)
 
 ```
 User <-> Claude <-> MCP Server <-> Platform API
