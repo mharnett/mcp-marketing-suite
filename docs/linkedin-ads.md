@@ -16,7 +16,7 @@
 ## Environment variables
 
 ```bash
-LINKEDIN_CLIENT_ID=your_client_id
-LINKEDIN_CLIENT_SECRET=your_client_secret
-LINKEDIN_REFRESH_TOKEN=your_refresh_token
+LINKEDIN_ADS_CLIENT_ID=your_client_id
+LINKEDIN_ADS_CLIENT_SECRET=your_client_secret
+LINKEDIN_ADS_REFRESH_TOKEN=your_refresh_token
 ```

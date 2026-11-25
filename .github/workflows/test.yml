@@ -25,6 +25,12 @@ jobs:
       - name: setup.sh integration tests
         run: bash tests/test-setup.sh
 
+      - name: README, check-packages.js and setup.sh list the same servers
+        run: node tests/test-manifest-sync.js
+
+      - name: Plugin manifests match setup.sh
+        run: node tests/test-marketplace.js
+
       - name: Package registry health check
         run: node tests/check-packages.js
 

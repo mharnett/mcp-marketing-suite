@@ -167,9 +167,9 @@ if [[ " ${NPM_INSTALLED[*]} " =~ " mcp-linkedin-ads " ]]; then
       "command": "node",
       "args": ["NMBIN/mcp-linkedin-ads/dist/index.js"],
       "env": {
-        "LINKEDIN_CLIENT_ID": "YOUR_CLIENT_ID",
-        "LINKEDIN_CLIENT_SECRET": "YOUR_CLIENT_SECRET",
-        "LINKEDIN_REFRESH_TOKEN": "YOUR_REFRESH_TOKEN"
+        "LINKEDIN_ADS_CLIENT_ID": "YOUR_CLIENT_ID",
+        "LINKEDIN_ADS_CLIENT_SECRET": "YOUR_CLIENT_SECRET",
+        "LINKEDIN_ADS_REFRESH_TOKEN": "YOUR_REFRESH_TOKEN"
       }
     }
 EOF
